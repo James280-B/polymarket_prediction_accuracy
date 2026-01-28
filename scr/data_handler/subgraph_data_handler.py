@@ -1,6 +1,6 @@
 import requests
 
-from scr.utils import parameters
+from polymarket_prediction_accuracy.scr.utils import parameters
 
 
 class SubgraphDataHandler(object):

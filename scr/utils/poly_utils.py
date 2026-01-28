@@ -10,12 +10,6 @@ class PolyUtilsHandler(object):
         return datetime.strptime(date, "%Y-%m-%dT%H:%M:%SZ")
 
     @staticmethod
-    def cast_datetime_to_utc(date: datetime) -> float:
-        dt_utc = date.replace(tzinfo=timezone.utc)
-        res = dt_utc.timestamp()
-        return res
-
-    @staticmethod
     def cast_utc_to_datetime(date: float) -> datetime:
         dt = datetime.fromtimestamp(date, tz=timezone.utc)
         return dt
@@ -25,6 +19,3 @@ class PolyUtilsHandler(object):
         date_dt = datetime.fromisoformat(date)
         dt_utc = date_dt.astimezone(pytz.utc)
         return dt_utc
-
-
-

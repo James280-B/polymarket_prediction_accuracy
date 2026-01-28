@@ -2,10 +2,10 @@ import pandas as pd
 import requests
 import datetime as dt
 
-from scr.utils.poly_utils import PolyUtilsHandler
-from scr.data_handler import csv_handler
-from scr.data_handler.subgraph_data_handler import SubgraphDataHandler
-from scr.utils import parameters
+from polymarket_prediction_accuracy.scr.utils.poly_utils import PolyUtilsHandler
+from polymarket_prediction_accuracy.scr.data_handler import csv_handler
+from polymarket_prediction_accuracy.scr.data_handler.subgraph_data_handler import SubgraphDataHandler
+from polymarket_prediction_accuracy.scr.utils import parameters
 
 
 class PolyDataHandler(object):
@@ -88,6 +88,8 @@ class PolyDataHandler(object):
         start_time_utc = None
         if self.horizon == "1w":
             start_time_utc = market_end_time_utc - dt.timedelta(days=7)
+        elif self.horizon == "1m":
+            start_time_utc = market_end_time_utc - dt.timedelta(days=30)
 
         evaluation_utc = start_time_utc
 
@@ -152,6 +154,9 @@ class PolyDataHandler(object):
             print(f"market {i} data completed")
 
         cleaned_clob_data_df = full_clob_data_df.drop(columns=["history"])
+
+        print(cleaned_clob_data_df["times"])
+        print(cleaned_clob_data_df["evaluation_time"])
 
         time_filter = abs(cleaned_clob_data_df["times"] - cleaned_clob_data_df["evaluation_time"]) <= self._utc_time_tol
         filtered_clob_data_df = cleaned_clob_data_df[time_filter]

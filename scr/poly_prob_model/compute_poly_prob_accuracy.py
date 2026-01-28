@@ -1,4 +1,4 @@
-from scr.data_handler.poly_data_handler import PolyDataHandler
+from polymarket_prediction_accuracy.scr.data_handler.poly_data_handler import PolyDataHandler
 
 class ComputePolyProbAccuracy(PolyDataHandler):
 

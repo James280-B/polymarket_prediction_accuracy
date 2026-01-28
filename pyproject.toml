@@ -1,0 +1,24 @@
+[build-system]
+requires = ["setuptools>=61", "wheel", "pkutils"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "poly_avg"
+version = "0.1.0"
+description = "Polymarket accuracy calcualtor"
+readme = "README.md"
+authors = [
+    { name = "James Brown", email = "jamie@gillbrown.com" }
+]
+requires-python = "==3.11"
+dependencies = [
+    "python-dotenv==1.2.1",
+    "pandas==3.0.0",
+    "setuptools==80.3.1",
+    "pytz==2025.2",
+    "websocket-client==1.9.0"
+]
+
+[tool.setuptools]
+package-dir = { "" = "art" }
+packages = ["controllers", "data", "workflows"]
