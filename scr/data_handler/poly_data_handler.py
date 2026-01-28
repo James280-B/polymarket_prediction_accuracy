@@ -17,17 +17,17 @@ class PolyDataHandler(object):
 
     _utc_time_tol = dt.timedelta(hours=13)
 
+    _resolution = 1440
+
     def __init__(
             self,
-            num_markets: int | str,
-            input_labels: list,
-            resolution: int,
+            num_markets: int,
+            labels: list,
             horizon: str
     ) -> None:
-        self.input_labels = input_labels
+        self.labels = labels
         self.num_markets = num_markets
-        self.resolution = resolution
-        self.horizon = horizon
+        self._horizon = horizon
 
     def _generate_tag_list(self) -> None:
         resp = requests.get(url=self._polymarket_tag_list_url)
@@ -47,7 +47,7 @@ class PolyDataHandler(object):
 
         self._check_tag_is_in_list()
 
-        user_tags_df = tags_df[tags_df["label"].isin(self.input_labels)]
+        user_tags_df = tags_df[tags_df["label"].isin(self.labels)]
 
         return user_tags_df
 
@@ -55,8 +55,8 @@ class PolyDataHandler(object):
         csv = csv_handler.CSVHandler()
         tags_df = csv.get_tags_df()
 
-        if ~tags_df["label"].isin(self.input_labels).any():
-            raise Exception(f"Tag '{self.input_labels}' not found.")
+        if ~tags_df["label"].isin(self.labels).any():
+            raise Exception(f"Tag '{self.labels}' not found.")
 
     def _request_market_data_via_tag_id(self, tag_id: int) -> pd.DataFrame:
         params = {
@@ -86,9 +86,9 @@ class PolyDataHandler(object):
         poly_utils = PolyUtilsHandler()
         market_end_time_utc = poly_utils.cast_poly_to_utc(market_end_time)
         start_time_utc = None
-        if self.horizon == "1w":
+        if self._horizon == "1w":
             start_time_utc = market_end_time_utc - dt.timedelta(days=7)
-        elif self.horizon == "1m":
+        elif self._horizon == "1m":
             start_time_utc = market_end_time_utc - dt.timedelta(days=30)
 
         evaluation_utc = start_time_utc
@@ -133,7 +133,7 @@ class PolyDataHandler(object):
                 "market": winning_token_id,
                 "endTs": data_end_time_utc.timestamp(),
                 "startTs": data_start_time_utc.timestamp(),
-                "fidelity": self.resolution,
+                "fidelity": self._resolution,
             }
 
             resp = requests.get(url=self._polymarket_historical_time_series_url, params=params)
